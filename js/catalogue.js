@@ -181,7 +181,7 @@ function quickView(productID) {
     let product = productResult.filter(function (obj) {
         return (obj[1] === productID)
     });
-    debugger;
+    
     $('#quickViewProductImage').attr('src', 'ProductImages/' + product[0][3]);
     $('#quickViewProductName').html(product[0][2]);
     $('#quickViewProductDescription').html(product[0][4]);
