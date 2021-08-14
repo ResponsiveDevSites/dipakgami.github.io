@@ -78,14 +78,14 @@ $(document).ready(function () {
         $(this).addClass('active');
     });
 
-
+    loadReviewCart();
 });
 
 function refreshData() {
     getCategoriesAjax();
     getProductsAjax();
     getProductVariantsAjax();
-   
+
 }
 
 function getCategoriesAjax() {
@@ -252,6 +252,7 @@ function loadProductDetails() {
     let productID = localStorage.getItem("selectedProductID");
 
     if (productID != null) {
+        $('#hdnProductID').val(productID);
         let product = productResult.filter(function (obj) {
             return (obj[1] === productID)
         });
@@ -267,13 +268,13 @@ function loadProductDetails() {
         let ramCapacityBlock = '';
         productDetails.filter(function (obj) {
             if (obj[3] == "Color") {
-                colorBlock += '<li><div style="padding:2px;"><a href="javascript:" title="' + obj[4] + '" style="background-color:' + obj[2] + '"></a></div></li>';
+                colorBlock += '<li data-val="' + obj[2] + '"><div style="padding:2px;"><a href="javascript:" title="' + obj[4] + '" style="background-color:' + obj[2] + '"></a></div></li>';
             }
             if (obj[3] == "Thickness") {
-                thicknessBlock += '<div class="custom-control custom-checkbox"><input type="checkbox" class="' + obj[3] + '" id="' + obj[3] + "_" + obj[2] + '" value="' + obj[3] + '"><label style="margin-left: 5px;" for="' + obj[3] + "_" + obj[2] + '">' + obj[4] + '</label> </div>';
+                thicknessBlock += '<div class="custom-control custom-checkbox"><input type="checkbox"  class="' + obj[3] + '" id="' + obj[3] + "_" + obj[2] + '" value="' + obj[2] + '"><label style="margin-left: 5px;" for="' + obj[3] + "_" + obj[2] + '">' + obj[4] + '</label> </div>';
             }
             if (obj[3] == "RAM") {
-                ramCapacityBlock += '<div class="custom-control custom-checkbox"><input type="checkbox" class="' + obj[3] + '" id="' + obj[3] + "_" + obj[2] + '" value="' + obj[3] + '"><label style="margin-left: 5px;" for="' + obj[3] + "_" + obj[2] + '">' + obj[4] + '</label> </div>';
+                ramCapacityBlock += '<div class="custom-control custom-checkbox"><input type="checkbox" class="' + obj[3] + '" id="' + obj[3] + "_" + obj[2] + '" value="' + obj[2] + '"><label style="margin-left: 5px;" for="' + obj[3] + "_" + obj[2] + '">' + obj[4] + '</label> </div>';
             }
         });
 
@@ -288,4 +289,99 @@ function loadProductDetails() {
         }
 
     }
+}
+
+function addToCart(finalize) {
+
+    //if (finalize == 'true') {
+    //    localStorage.setItem("cart", '');
+    //}
+    let selectedColor = null;
+    let thickness = null;
+    let RAM = null;
+    let quantity = $('#txtQty').val();
+    let productID = $('#hdnProductID').val();
+
+    selectedColor = $('#colorFilterOptions .active').attr('data-val');
+    $(".Thickness").each(function () {
+        if ($(this).is(":checked")) {
+            thickness = $(this).attr('value');
+        }
+    });
+
+    $(".RAM").each(function () {
+        if ($(this).is(":checked")) {
+            RAM = $(this).attr('value');
+        }
+    });
+
+    let cartObj = [];
+
+    if (localStorage.getItem("cart") != null && localStorage.getItem("cart") != '') {
+        cartObj = JSON.parse(localStorage.getItem("cart"));
+    }
+
+    if (productID != null && selectedColor != null && thickness != null && RAM != null && quantity != null && quantity != '' && productID != '') {
+        cartItem = {}
+        cartItem["ProductID"] = productID;
+        cartItem["Color"] = selectedColor;
+        cartItem["Thickness"] = thickness;
+        cartItem["RAM"] = RAM;
+        cartItem["Quantity"] = quantity;
+        cartObj.push(cartItem);
+        localStorage.setItem("cart", JSON.stringify(cartObj));
+
+        if (finalize == 'true') {
+            window.location.href = "review.html"
+        }
+        $('#validationMsg').removeClass('alert alert-danger');
+        $('#validationMsg').addClass('alert alert-success');
+        $('#validationMsg').html('Item added..')
+        $('#validationMsg').fadeIn('fast').delay(2000);
+        $('#validationMsg').fadeOut('slow').delay(3000).hide(0);
+    }
+    else {
+        $('#validationMsg').removeClass('alert alert-success');
+        $('#validationMsg').addClass('alert alert-danger');
+        $('#validationMsg').html('Select all options..')
+        $('#validationMsg').fadeIn('fast').delay(2000);
+        $('#validationMsg').fadeOut('slow').delay(3000).hide(0);
+    }
+
+
+
+}
+
+function loadReviewCart() {
+    let cartObj = [];
+
+    if (localStorage.getItem("cart") != null && localStorage.getItem("cart") != '') {
+        cartObj = JSON.parse(localStorage.getItem("cart"));
+
+
+        let cartItemBlock = '';
+        for (let i = 0; i < cartObj.length; i++) {
+
+            let product = productResult.filter(function (obj) {
+                return (obj[1] == cartObj[i].ProductID);
+            });
+            let productThickness = productVariantsResult.filter(function (obj) {
+                return (obj[2] == cartObj[i].Thickness);
+            });
+            let productRam = productVariantsResult.filter(function (obj) {
+                return (obj[2] == cartObj[i].RAM);
+            });
+            cartItemBlock += '<tr><td class="product-col"><figure class="product-image-container"><a href="javascript:" class="product-image"> <img id="reviewProductImage" src="ProductImages/' + product[0][3] + '" alt="product"> <input type="hidden" id="reviewProductID" /> </a> </figure> <div class="widget widget-categories"> <h4 class="widget-title">' + product[0][2] + '</h4> <ul class="list"> <li><a href="javascript;">Color: <div style="background-color: ' + cartObj[i].Color + '; height: 20px; width: 20px; display: inline-block; margin-bottom: -5px;"></div></a> </li> <li><a href="#">Thickness: <span class="">' + productThickness[0][4] + '</span></a></li> <li><a href="#">RAM: <span class="">' + productRam[0][4] + '</span></a></li> </ul>  </div> </td>  <td class="price-col">Quanitity: <span class="">' + cartObj[i].Quantity + '</span></td>  </tr>';
+        }
+        $('#reviewCart').html(cartItemBlock);
+    }
+	else{
+		$('#reviewCart').html('<tr><td  colspan="3">No Items..</td></tr>');
+	}
+
+}
+function clearCart() {
+    localStorage.setItem("cart", '');
+	$('#reviewCart').html('<tr><td  colspan="3">No Items..</td></tr>');
+    //window.location.href = "products.html";
 }
