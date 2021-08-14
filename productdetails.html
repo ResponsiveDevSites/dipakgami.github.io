@@ -27,6 +27,17 @@
         })(document);
 
     </script>
+    <style>
+        .cart-btn:after {
+            content: "\e81c";
+            border: 0;
+            margin: -5px 2px 0 11px;
+            font-size: 15px;
+            font-family: porto;
+            width: auto;
+            height: auto;
+        }
+    </style>
     <!-- Plugins CSS File -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <!-- Main CSS File -->
@@ -48,8 +59,9 @@
             margin-top: 1rem;
             margin-bottom: 1rem;
         }
+        
     </style>
-    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/skins/all.css" rel="stylesheet">-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/skins/all.css" rel="stylesheet">
 
 </head>
 <body>
@@ -159,11 +171,11 @@
                 <div class="col-lg-12 main-content">
                     <div class="product-single-container product-single-default">
                         <div class="row">
-                            <div class="col-lg-6 col-md-6 product-single-gallery">
+                            <div class="col-lg-5 col-md-5 product-single-gallery">
                                 <div class="product-slider-container">
                                     <div class="">
                                         <div class="product-item">
-                                            <img id="productDetailImage" src="ProductImages/product_1.jpg" />
+                                            <img id="productDetailImage" class="img-responsive" />
                                         </div>
                                         <!-- End .product-single-carousel -->
                                     </div>
@@ -173,73 +185,50 @@
 
                             <div class="col-lg-6 col-md-6">
                                 <div class="product-single-details">
-                                    <h1 class="product-title" id="productDetailProductName">Product Long Name</h1>
+                                    <h1 class="product-title" id="productDetailProductName"> </h1>
 
                                     <hr class="short-divider">
 
                                     <div class="product-desc">
-                                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non.</p>
+                                        <p id="productDetailProductDescription"></p>
                                     </div><!-- End .product-desc -->
                                     <hr class="divider">
                                     <div class="product-filters-container">
-                                        <div class="product-single-filter">
+                                        <div class="product-single-filter" id="colorFilter">
                                             <label>Colors:</label>
-                                            <ul class="config-swatch-list">
-                                                <li class="active">
-                                                    <a href="#" style="background-color: #0188cc;"></a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" style="background-color: #ab6e6e;"></a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" style="background-color: #ddb577;"></a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" style="background-color: #6085a5;"></a>
-                                                </li>
+                                            <ul class="config-swatch-list" id="colorFilterOptions">
                                             </ul>
                                         </div><!-- End .product-single-filter -->
 
                                         <hr class="divider">
                                         <div class="product-single-filter">
-                                            <label>Thickness:</label>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="thickness_T1" value="1">
-                                                <label class="custom-control-label" for="thickness_T1">M</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="thickness_T2" value="2">
-                                                <label class="custom-control-label" for="thickness_T2">XXL</label>
-                                            </div>
+                                            <label id="thicknessOptions">Thickness:</label>
                                         </div>
                                         <hr class="divider">
                                         <div class="product-single-filter">
-                                            <label>Thickness:</label>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="RAM_RNP128" value="1">
-                                                <label class="custom-control-label" for="RAM_RNP128">128 GB</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="RAM_RNP64" value="2">
-                                                <label class="custom-control-label" for="RAM_RNP64">64 GB</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="RAM_RNP32" value="2">
-                                                <label class="custom-control-label" for="RAM_RNP32">32 GB</label>
-                                            </div>
+                                            <label id="ramCapacityOptions">RAM Capacity:</label>
+
                                         </div>
                                         <hr class="divider">
 
                                         <div class="product-single-filter">
                                             <label>Quantity:</label>
-                                            <input type="text" id="txtQty" class="form-input" style="height:34px">
+                                            <input type="number" id="txtQty" class="form-input" style="height:34px">
                                             <!-- End .product-single-qty -->
                                         </div><!-- End .product-action -->
 
                                         <hr class="divider">
-                                        <div class="product-action">
-                                            <a href="javascript:" class="btn col-xs-12 btn-dark add-cart icon-shopping-cart" title="Add to Cart">Add to Cart</a>
-                                            <a href="javascript:" class="btn col-xs-12 btn-dark add-cart icon-shopping-cart" title="Add to Cart">Checkout</a>
+                                        <div class="">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn col-xs-12 btn-dark add-cart icon-shopping-cart">Add to Cart</button>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn col-xs-12 btn-dark add-cart cart-btn" data-toggle="dropdown">
+                                                    </button>
+                                                    <ul class="dropdown-menu" style="padding: 10px; min-width: 160px" role="menu">
+                                                        <li><a class="icon-shopping-cart" style="color: black; font-size: 1.4rem; font-weight: 700; font-size: 14px;" href="#">&nbsp;Add & Finalize</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
                                         </div><!-- End .product-action -->
 
                                         <hr class="divider mb-1">
@@ -329,7 +318,7 @@
         <div class="container">
             <div class="footer-bottom d-flex justify-content-between align-items-center flex-wrap">
                 <p class="footer-copyright py-3 pr-4 mb-0">© Company. 2021. All Rights Reserved</p>
-                <p class="footer-copyright py-3 pr-4 mb-0">v 1.5</p>
+                 <p class="footer-copyright py-3 pr-4 mb-0">v 1.6</p>
             </div><!-- End .footer-bottom -->
         </div><!-- End .container -->
     </footer>
@@ -399,7 +388,7 @@
     <!-- Main JS File -->
     <script src="assets/js/main.min.js"></script>
     <script src="js/catalogue.js"></script>
-    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/icheck.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/icheck.min.js"></script>
     <script>
         $(document).ready(function () {
             $('input').iCheck({
@@ -407,6 +396,6 @@
                 radioClass: 'iradio_flat'
             });
         });
-    </script>-->
+    </script>
 </body>
 </html>
