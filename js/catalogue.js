@@ -122,7 +122,6 @@ function getProductsAjax() {
 
 }
 function getProductVariantsAjax() {
-    debugger;
     $.ajax({
         type: "GET",
         url: readProductVariantsURL,
@@ -130,7 +129,6 @@ function getProductVariantsAjax() {
         dataType: "json",
         success: function (data) {
             productVariantsResult = data.values.slice(1); //removed first row. it contains column title
-            debugger;
             localStorage.setItem("productVariantsResult", JSON.stringify(productVariantsResult));
             loadProductDetails();
             window.location.href = "products.html";
